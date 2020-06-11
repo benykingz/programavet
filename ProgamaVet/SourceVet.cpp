@@ -10,7 +10,7 @@
 
 #define MI_TIMER 555
 
-// todo pagar, modificar y eliminar citas || mostrar por orden cronologico 
+// todo pagar || mostrar por orden cronologico 
 
 time_t UnixDate;
 struct tm* RealUnixDate;
@@ -97,6 +97,93 @@ struct cita {
 	cita *prevC;
 }*originC = NULL, *auxC = NULL;
 
+cita *split(cita *head);
+
+cita *merge(cita *first, cita *second)
+{
+	if (!first)
+		return second;
+	if (!second)
+		return first;
+	if (first->telefono < second->telefono)
+	{
+		first->nextC = merge(first->nextC, second);
+		first->nextC->prevC = first;
+		first->prevC = NULL;
+		return first;
+	}
+	else
+	{
+		second->nextC = merge(first, second->nextC);
+		second->nextC->prevC = second;
+		second->prevC = NULL;
+		return second;
+	}
+}
+
+cita *mergeSort(cita *head)
+{
+	if (!head || !head->nextC)
+		return head;
+	cita *second = split(head);
+	head = mergeSort(head);
+	second = mergeSort(second);
+	return merge(head, second);
+}
+
+void insert(cita **head, string data)
+{
+	cita *temp = new cita();
+	temp->telefono = data;
+	temp->nextC = temp->prevC = NULL;
+	if (!(*head))
+		(*head) = temp;
+	else
+	{
+		temp->nextC = *head;
+		(*head)->prevC = temp;
+		(*head) = temp;
+	}
+}
+
+void swap(int *A, int *B)
+{
+	int temp = *A;
+	*A = *B;
+	*B = temp;
+}
+//////////////////
+void print(cita *head)
+{
+	cita *temp = head;
+	cout << "Forward Traversal using next poitner\n";
+	while (head)
+	{
+		cout << head->telefono << " ";
+		temp = head;
+		head = head->nextC;
+	}
+	cout << "\nBackward Traversal using prev pointer\n";
+	while (temp)
+	{
+		cout << temp->telefono << " ";
+		temp = temp->prevC;
+	}
+}
+
+cita *split(cita *head)
+{
+	cita *fast = head, *slow = head;
+	while (fast->nextC && fast->nextC->nextC)
+	{
+		fast = fast->nextC->nextC;
+		slow = slow->nextC;
+	}
+	cita *temp = slow->nextC;
+	slow->nextC = NULL;
+	return temp;
+}
+
 struct Currentcita {
 	Calendario cfechaCita;
 	int currIDp;
@@ -110,6 +197,121 @@ struct Currentcita {
 	char currbitmapPet2[MAX_PATH];
 	char currbitmapPet3[MAX_PATH];
 };
+
+
+/////////////////
+
+/*
+class Node
+{
+public:
+	int data;
+	Node *next, *prev;
+};
+//Node *split(Node *head);
+*/
+/*
+Node *merge(Node *first, Node *second)
+{
+	if (!first)
+		return second;
+	if (!second)
+		return first;
+	if (first->data < second->data)
+	{
+		first->next = merge(first->next, second);
+		first->next->prev = first;
+		first->prev = NULL;
+		return first;
+	}
+	else
+	{
+		second->next = merge(first, second->next);
+		second->next->prev = second;
+		second->prev = NULL;
+		return second;
+	}
+}
+*/
+
+/*
+Node *mergeSort(Node *head)
+{
+	if (!head || !head->next)
+		return head;
+	Node *second = split(head);
+
+	// Recur for left and right halves  
+	head = mergeSort(head);
+	second = mergeSort(second);
+
+	// Merge the two sorted halves  
+	return merge(head, second);
+}*/
+/*
+void insert(Node **head, int data)
+{
+	Node *temp = new Node();
+	temp->data = data;
+	temp->next = temp->prev = NULL;
+	if (!(*head))
+		(*head) = temp;
+	else
+	{
+		temp->next = *head;
+		(*head)->prev = temp;
+		(*head) = temp;
+	}
+}
+*/
+/*
+void swap(int *A, int *B)
+{
+	int temp = *A;
+	*A = *B;
+	*B = temp;
+}*/
+/*
+void print(Node *head)
+{
+	Node *temp = head;
+	cout << "Forward Traversal using next poitner\n";
+	while (head)
+	{
+		cout << head->data << " ";
+		temp = head;
+		head = head->next;
+	}
+	cout << "\nBackward Traversal using prev pointer\n";
+	while (temp)
+	{
+		cout << temp->data << " ";
+		temp = temp->prev;
+	}
+}
+*/
+/*
+cita *split(cita *head)
+{
+	Node *fast = head, *slow = head;
+	while (fast->next && fast->next->next)
+	{
+		fast = fast->next->next;
+		slow = slow->next;
+	}
+	Node *temp = slow->next;
+	slow->next = NULL;
+	return temp;
+}*/
+
+
+
+
+
+
+
+
+
 
 Currentcita cCurrCita;
 
@@ -439,6 +641,8 @@ BOOL CALLBACK faltauser(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 //Botones del Principal
 BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
+
+
 	switch (msg) {
 
 	case WM_COMMAND:
@@ -493,6 +697,32 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			BOOL bCitasExist = false;
 
 			//error
+			// todo mostrar en la caja los datos mas proximos a mas lejanos
+
+
+			cita *head = NULL;
+			insert(&head, "11111111");
+			insert(&head, "11111112");
+			insert(&head, "11111113");
+			insert(&head, "11111114");
+			insert(&head, "11111115");
+			insert(&head, "11111116");
+			insert(&head, "11111117");
+			head = mergeSort(head);
+			cout << "Linked List after sorting\n";
+			print(head);
+
+
+
+
+
+
+
+
+
+
+
+
 			while (auxC != NULL) {
 
 				if (auxC->iIDvinculo == cCurr.IDmC) {
@@ -938,7 +1168,7 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			SendMessage(hLbCitas, LB_RESETCONTENT, NULL, NULL);
 
 			bool bCitasExist = false;
-
+			// todo mostrar en la caja los datos mas proximos a mas lejanos
 
 			while (auxC != NULL) {
 
@@ -1432,6 +1662,8 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			GetWindowText(hTxtNewDateMonth, cDateMonth, ++iDateMonthLength);
 			GetWindowText(hTxtNewDateYear, cDateYear, ++iDateYearLength);
 
+			// todo comparar hechas, usar los dato  cFechaActual.dia    cFechaActual.mes    cFechaActual.año 
+
 			bool Digit = FALSE;
 			for (int i = 0; i < iPetNameLenght - 1; i++) {
 
@@ -1647,6 +1879,8 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				break;
 			}
 
+			//
+
 #pragma endregion obtencion
 
 			if (bCitaAlt == TRUE) {
@@ -1670,6 +1904,10 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 					originC->fechaCita.dia = cDateDay;
 					originC->fechaCita.mes = cDateMonth;
 					originC->fechaCita.año = cDateYear;
+
+
+					
+
 
 					originC->iIDvinculo = cCurr.IDmC;
 					iContPetID++;
