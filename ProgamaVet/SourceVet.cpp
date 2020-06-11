@@ -462,6 +462,7 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			SendMessage(hPictureControl, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hImagenDoc);
 
 		}
+		//error
 		else if (LOWORD(wparam) == ID_NUEVACITA) {
 			bCitaAlt = TRUE;
 
@@ -491,6 +492,7 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 			BOOL bCitasExist = false;
 
+			//error
 			while (auxC != NULL) {
 
 				if (auxC->iIDvinculo == cCurr.IDmC) {
@@ -577,6 +579,8 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			DestroyWindow(hwnd);
 
 		}
+
+		//error
 		else if (LOWORD(wparam) == ID_LB_CITAS && HIWORD(wparam) == LBN_SELCHANGE) {
 
 			SelectCita == true;
@@ -873,7 +877,7 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 		break;
 
 	case WM_INITDIALOG:
-
+		//error
 		if (bNewUser != TRUE) {
 
 			HWND hLblDocName = GetDlgItem(hwnd, ID_LBL_DocName);
@@ -926,12 +930,15 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			HWND hPictureControl = GetDlgItem(hwnd, ID_IMAGE_DOCPRIN);
 			SendMessage(hPictureControl, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hImagenDoc);
 
+			// mostrar listas de citas
+
 			auxC = originC;
 			int index = 0;
 			HWND hLbCitas = GetDlgItem(hwnd, ID_LB_CITAS);
 			SendMessage(hLbCitas, LB_RESETCONTENT, NULL, NULL);
 
 			bool bCitasExist = false;
+
 
 			while (auxC != NULL) {
 
@@ -1042,26 +1049,6 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			SetWindowText(hLblDocName, cCurr.nameC.c_str());
 
 			SetWindowText(hLblDocCed, cCurr.cedC.c_str());
-
-			auxC = originC;
-			int index = 0;
-			HWND hLbCitas = GetDlgItem(hwnd, ID_LB_CITAS);
-			SendMessage(hLbCitas, LB_RESETCONTENT, NULL, NULL);
-
-			bool bCitasExist = false;
-			while (auxC != NULL) {
-
-				if (auxC->iIDvinculo == cCurr.IDmC) {
-
-					bCitasExist = true;
-
-					SendMessage(hLbCitas, LB_ADDSTRING, NULL, (LPARAM)auxC->nameMascota.c_str());
-					SendMessage(hLbCitas, LB_SETITEMDATA, (WPARAM)index, (LPARAM)auxC->IDp);
-					index++;
-				}
-
-				auxC = auxC->nextC;
-			}auxC = originC;
 
 			HBITMAP hImagenDoc = NULL;
 
@@ -1274,7 +1261,7 @@ BOOL CALLBACK finfoadoc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 				break;
 			}
-			int resultsalir = DialogBox(hGlobalInst, MAKEINTRESOURCE(ID_NUEVACITA), hwnd, faltacita);
+			//int resultsalir = DialogBox(hGlobalInst, MAKEINTRESOURCE(ID_NUEVACITA), hwnd, faltacita);
 			EndDialog(hwnd, NumInfExit);
 		}
 
@@ -1685,8 +1672,8 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 					originC->fechaCita.año = cDateYear;
 
 					originC->iIDvinculo = cCurr.IDmC;
-
 					iContPetID++;
+
 
 					originC->nextC = NULL;
 					originC->prevC = NULL;
@@ -1870,6 +1857,19 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				MessageBox(NULL, "No selecciono una imagen", "Alerta", MB_ICONWARNING);
 				break;
 			}
+		}
+
+		else if (LOWORD(wparam) == ID_AGENDA && HIWORD(wparam) == BN_CLICKED) {
+
+		if (bNewUser == TRUE) {
+
+			MessageBox(NULL, "Ingrese todos los datos para ir a agenda", "XD", MB_ICONERROR);
+
+			break;
+		}
+		MessageBox(NULL, "Se volvera a la pantalla inicial", "XD", MB_ICONINFORMATION);
+		EndDialog(hwnd, NumInfExit);
+		break;
 		}
 
 		break;
