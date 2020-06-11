@@ -67,10 +67,10 @@
 #define ID_GETDAY                       1074
 #define IDC_STATIC_D                    1075
 #define ID_GETMONTH                     1076
-#define ID_BTN_GETYEAR                  1077
 #define ID_GETYEAR                      1077
 #define IDC_STATIC_M                    1078
 #define IDC_STATIC_Y                    1079
+#define IDC_LIST1                       1080
 #define ID_DIALOG_PRIN                  1102
 #define ID_NEW_EDIT_PASS                1111
 #define ID_NEW_BTN_REG                  1112
@@ -95,7 +95,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        125
 #define _APS_NEXT_COMMAND_VALUE         40005
-#define _APS_NEXT_CONTROL_VALUE         1080
+#define _APS_NEXT_CONTROL_VALUE         1081
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

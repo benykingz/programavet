@@ -81,7 +81,8 @@ struct Calendario {
 };
 
 struct cita {
-	Calendario fechaCita;
+	//Calendario fechaCita;
+	string fechaCita;
 	int IDp;
 	int iIDvinculo;
 	float costo;
@@ -105,7 +106,7 @@ cita *merge(cita *first, cita *second)
 		return second;
 	if (!second)
 		return first;
-	if (first->telefono < second->telefono)
+	if (first->fechaCita < second->fechaCita)
 	{
 		first->nextC = merge(first->nextC, second);
 		first->nextC->prevC = first;
@@ -134,7 +135,7 @@ cita *mergeSort(cita *head)
 void insert(cita **head, string data)
 {
 	cita *temp = new cita();
-	temp->telefono = data;
+	temp->fechaCita = data;
 	temp->nextC = temp->prevC = NULL;
 	if (!(*head))
 		(*head) = temp;
@@ -159,14 +160,14 @@ void print(cita *head)
 	cout << "Forward Traversal using next poitner\n";
 	while (head)
 	{
-		cout << head->telefono << " ";
+		cout << head->fechaCita << " ";
 		temp = head;
 		head = head->nextC;
 	}
 	cout << "\nBackward Traversal using prev pointer\n";
 	while (temp)
 	{
-		cout << temp->telefono << " ";
+		cout << temp->fechaCita << " ";
 		temp = temp->prevC;
 	}
 }
@@ -699,7 +700,7 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			//error
 			// todo mostrar en la caja los datos mas proximos a mas lejanos
 
-
+			/*
 			cita *head = NULL;
 			insert(&head, "11111111");
 			insert(&head, "11111112");
@@ -711,24 +712,22 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			head = mergeSort(head);
 			cout << "Linked List after sorting\n";
 			print(head);
+			*/
 
+			/*
+			cita *lol = originC;
+			lol = mergeSort(lol);
+			print(lol)¨*/
 
-
-
-
-
-
-
-
-
-
+			originC = mergeSort(originC);
+			auxC = originC;
 
 			while (auxC != NULL) {
 
 				if (auxC->iIDvinculo == cCurr.IDmC) {
 
 					bCitasExist = true;
-
+			
 					SendMessage(hLbCitas, LB_ADDSTRING, NULL, (LPARAM)auxC->nameMascota.c_str());
 					SendMessage(hLbCitas, LB_SETITEMDATA, (WPARAM)index, (LPARAM)auxC->IDp);
 					index++;
@@ -829,8 +828,14 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 			cCurrCita.currIDp = idSelected;
 
+
+			//originC = mergeSort(originC);
+			//auxC = originC;
+
+
 			auxC = originC;
 			while (auxC->IDp != idSelected) {
+			//while (auxC->IDp != iSelectionIndex) {
 				auxC = auxC->nextC;
 			}
 
@@ -845,7 +850,8 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			HWND hLblPetMotive = GetDlgItem(hwnd, ID_SHOWMOTIVEPET);
 			SetWindowText(hLblPetMotive, auxC->motivo.c_str());
 
-			string sDatePetShow = auxC->fechaCita.dia + "/" + auxC->fechaCita.mes + "/" + auxC->fechaCita.año;
+			//string sDatePetShow = auxC->fechaCita.dia + "/" + auxC->fechaCita.mes + "/" + auxC->fechaCita.año;
+			string sDatePetShow = auxC->fechaCita;
 
 			HWND hLblDatePet = GetDlgItem(hwnd, ID_SHOWDATEPET);
 			SetWindowText(hLblDatePet, sDatePetShow.c_str());
@@ -1022,6 +1028,23 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 			bool bCitasExist = false;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			while (auxC != NULL) {
 
 				if (auxC->iIDvinculo == cCurr.IDmC) {
@@ -1170,15 +1193,21 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			bool bCitasExist = false;
 			// todo mostrar en la caja los datos mas proximos a mas lejanos
 
+			//originC = mergeSort(originC);
+			//auxC = originC;
+
+			//originC = mergeSort(originC);
+			//auxC = originC;
+
 			while (auxC != NULL) {
 
 				if (auxC->iIDvinculo == cCurr.IDmC) {
 
 					bCitasExist = true;
-
+					//index = auxC->IDp;
 					SendMessage(hLbCitas, LB_ADDSTRING, NULL, (LPARAM)auxC->nameMascota.c_str());
 					SendMessage(hLbCitas, LB_SETITEMDATA, (WPARAM)index, (LPARAM)auxC->IDp);
-					index++;
+				 index++;
 				}
 
 				auxC = auxC->nextC;
@@ -1573,9 +1602,9 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 			SetWindowText(hTxtNewTipo, auxC->tipMascota.c_str());
 
-			SetWindowText(hTxtNewDateDay, auxC->fechaCita.dia.c_str());
-			SetWindowText(hTxtNewDateMonth, auxC->fechaCita.mes.c_str());
-			SetWindowText(hTxtNewDateYear, auxC->fechaCita.año.c_str());
+			//SetWindowText(hTxtNewDateDay, auxC->fechaCita.dia.c_str());
+			//SetWindowText(hTxtNewDateMonth, auxC->fechaCita.mes.c_str());
+			//SetWindowText(hTxtNewDateYear, auxC->fechaCita.año.c_str());
 
 			bImagenSelecPet1 = TRUE;
 
@@ -1767,6 +1796,22 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				}
 			}
 
+
+			//Date
+			if ((iPhoneLenght > 9 || iPhoneLenght < 9)) {
+				if ((iPhoneLenght > 11 || iPhoneLenght < 11)) {
+					if ((iPhoneLenght > 13 || iPhoneLenght < 13)) {
+						MessageBox(NULL, "telefono debe tener 8, 10 0 12 digitos", "Error", MB_ICONERROR);
+						SetWindowText(hTxtNewTelephone, "");
+						break;
+					}
+				}
+			}
+
+
+
+
+
 			Digit = FALSE;
 			int contPunto = 0;
 			for (int i = 0; i < iPriceLength - 1; i++) {
@@ -1879,6 +1924,29 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				break;
 			}
 
+			string AuxStringDay = cDateDay;
+			string AuxStringMonth = cDateMonth;
+			string AuxStringYear = cDateYear;
+
+			string cFechacita = AuxStringYear + "/" + AuxStringMonth + "/" + AuxStringDay;
+
+			AuxStringDay = cFechaActual.dia;
+			AuxStringMonth = cFechaActual.mes;
+			AuxStringYear = cFechaActual.año;
+
+			string cFechaActual = AuxStringYear + "/" + AuxStringMonth + "/" + AuxStringDay;
+
+			if (cFechaActual > cFechacita) {
+				MessageBox(NULL, "Ingrese una fecha mayor a la actual", "Error", MB_ICONERROR);
+				SetWindowText(hTxtNewDateMonth, "");
+				SetWindowText(hTxtNewDateDay, "");
+				SetWindowText(hTxtNewDateYear, "");
+				break;
+			}
+
+
+
+
 			//
 
 #pragma endregion obtencion
@@ -1901,17 +1969,20 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 					strcpy_s(originC->bitmapPet2, cCurrCita.currbitmapPet2);
 					strcpy_s(originC->bitmapPet3, cCurrCita.currbitmapPet3);
 
-					originC->fechaCita.dia = cDateDay;
-					originC->fechaCita.mes = cDateMonth;
-					originC->fechaCita.año = cDateYear;
+					//originC->fechaCita.dia = cDateDay;
+					//originC->fechaCita.mes = cDateMonth;
+					//originC->fechaCita.año = cDateYear;
 
+					string AuxStringDay = cDateDay;
+					string AuxStringMonth = cDateMonth;
+					string AuxStringYear = cDateYear;
 
-					
+					string cDatePetShow = AuxStringYear + "/" + AuxStringMonth + "/" + AuxStringDay;
 
+					originC->fechaCita = cDatePetShow;
 
 					originC->iIDvinculo = cCurr.IDmC;
 					iContPetID++;
-
 
 					originC->nextC = NULL;
 					originC->prevC = NULL;
@@ -1943,9 +2014,20 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 					strcpy_s(auxC->bitmapPet2, cCurrCita.currbitmapPet2);
 					strcpy_s(auxC->bitmapPet3, cCurrCita.currbitmapPet3);
 
+					/*
 					auxC->fechaCita.dia = cDateDay;
 					auxC->fechaCita.mes = cDateMonth;
 					auxC->fechaCita.año = cDateYear;
+					*/
+
+					string AuxStringDay = cDateDay;
+					string AuxStringMonth = cDateMonth;
+					string AuxStringYear = cDateYear;
+
+					string cDatePetShow = AuxStringYear + "/" + AuxStringMonth + "/" + AuxStringDay;
+
+					auxC->fechaCita = cDatePetShow;
+
 
 					auxC->iIDvinculo = cCurr.IDmC;
 
@@ -1954,6 +2036,9 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 					auxC->nextC = NULL;
 
 					auxC = originC;
+
+					//originC = mergeSort(originC);
+					//auxC = originC;
 
 					MessageBox(NULL, "paciente Registrado Exitosamente", "XD", MB_ICONINFORMATION);
 
@@ -1972,9 +2057,19 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				strcpy_s(auxC->bitmapPet2, cCurrCita.currbitmapPet2);
 				strcpy_s(auxC->bitmapPet3, cCurrCita.currbitmapPet3);
 
+				/*
 				auxC->fechaCita.dia = cDateDay;
 				auxC->fechaCita.mes = cDateMonth;
 				auxC->fechaCita.año = cDateYear;
+				*/
+
+				string AuxStringDay = cDateDay;
+				string AuxStringMonth = cDateMonth;
+				string AuxStringYear = cDateYear;
+
+				string cDatePetShow = AuxStringYear + "/" + AuxStringMonth + "/" + AuxStringDay;
+
+				auxC->fechaCita = cDatePetShow;
 
 				MessageBox(NULL, "Actualizado Exitosamente", "XD", MB_ICONINFORMATION);
 
@@ -2353,9 +2448,13 @@ void cargaPet() {
 				strcpy_s(originC->bitmapPet2, tempC->bitmapPet2);
 				strcpy_s(originC->bitmapPet3, tempC->bitmapPet3);
 
+				/*
 				originC->fechaCita.dia = tempC->fechaCita.dia;
 				originC->fechaCita.mes = tempC->fechaCita.mes;
 				originC->fechaCita.año = tempC->fechaCita.año;
+				*/
+
+				originC->fechaCita = tempC->fechaCita;
 
 				originC->iIDvinculo = tempC->iIDvinculo;
 
@@ -2387,9 +2486,14 @@ void cargaPet() {
 				strcpy_s(auxC->bitmapPet2, tempC->bitmapPet2);
 				strcpy_s(auxC->bitmapPet3, tempC->bitmapPet3);
 
+
+				/*
 				auxC->fechaCita.dia = tempC->fechaCita.dia;
 				auxC->fechaCita.mes = tempC->fechaCita.mes;
 				auxC->fechaCita.año = tempC->fechaCita.año;
+				*/
+
+				auxC->fechaCita = tempC->fechaCita;
 
 				auxC->iIDvinculo = tempC->iIDvinculo;
 
