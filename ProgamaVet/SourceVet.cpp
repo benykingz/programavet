@@ -686,28 +686,6 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 			BOOL bCitasExist = false;
 
-			//error
-			// todo mostrar en la caja los datos mas proximos a mas lejanos
-
-			/*
-			cita *head = NULL;
-			insert(&head, "11111111");
-			insert(&head, "11111112");
-			insert(&head, "11111113");
-			insert(&head, "11111114");
-			insert(&head, "11111115");
-			insert(&head, "11111116");
-			insert(&head, "11111117");
-			head = mergeSort(head);
-			cout << "Linked List after sorting\n";
-			print(head);
-			*/
-
-			/*
-			cita *lol = originC;
-			lol = mergeSort(lol);
-			print(lol)¨*/
-
 			originC = mergeSort(originC);
 			auxC = originC;
 
@@ -1580,9 +1558,40 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 			SetWindowText(hTxtNewTipo, auxC->tipMascota.c_str());
 
-			//SetWindowText(hTxtNewDateDay, auxC->fechaCita.dia.c_str());
-			//SetWindowText(hTxtNewDateMonth, auxC->fechaCita.mes.c_str());
-			//SetWindowText(hTxtNewDateYear, auxC->fechaCita.año.c_str());
+			string strAuxDay;
+			string strAuxMonth;
+			string strAuxYear;
+
+
+			int LenghtOfStr = auxC->fechaCita.length();
+
+			if (LenghtOfStr == 10) {
+				strAuxYear = auxC->fechaCita.substr(0, 4);
+				strAuxMonth = auxC->fechaCita.substr(5, 2);
+				strAuxDay = auxC->fechaCita.substr(8, 2);
+			}
+			if (LenghtOfStr == 9) {
+				string strIfIsGuion = auxC->fechaCita.substr(7, 1);
+				if (strIfIsGuion == "/" ) {
+					strAuxYear = auxC->fechaCita.substr(0, 4);
+					strAuxMonth = auxC->fechaCita.substr(5, 2);
+					strAuxDay = auxC->fechaCita.substr(8, 1);
+				}
+				else {
+					strAuxYear = auxC->fechaCita.substr(0, 4);
+					strAuxMonth = auxC->fechaCita.substr(5, 1);
+					strAuxDay = auxC->fechaCita.substr(7, 2);
+				}
+			}
+			if (LenghtOfStr == 8) {
+				strAuxYear = auxC->fechaCita.substr(0, 4);
+				strAuxMonth = auxC->fechaCita.substr(5, 1);
+				strAuxDay = auxC->fechaCita.substr(7, 1);
+			}
+
+			SetWindowText(hTxtNewDateDay, strAuxDay.c_str());
+			SetWindowText(hTxtNewDateMonth, strAuxMonth.c_str());
+			SetWindowText(hTxtNewDateYear, strAuxYear.c_str());
 
 			bImagenSelecPet1 = TRUE;
 
@@ -1605,6 +1614,10 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			hImagenPet3 = (HBITMAP)LoadImage(NULL, auxC->bitmapPet3, IMAGE_BITMAP, 110, 110, LR_LOADFROMFILE);
 			HWND hPictureControlP3 = GetDlgItem(hwnd, ID_SHOWBIT3_ALT);
 			SendMessage(hPictureControlP3, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hImagenPet3);
+
+			strcpy_s(cCurrCita.currbitmapPet1, auxC->bitmapPet1);
+			strcpy_s(cCurrCita.currbitmapPet2, auxC->bitmapPet2);
+			strcpy_s(cCurrCita.currbitmapPet3, auxC->bitmapPet3);
 		}
 
 	}
@@ -1774,6 +1787,12 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				}
 			}
 
+			if ((iDateYearLength > 5 || iDateYearLength < 5)) {
+				MessageBox(NULL, "Año debe tener 4 digitos", "Error", MB_ICONERROR);
+				SetWindowText(hTxtNewDateYear, "");
+				break;
+			}
+
 			Digit = FALSE;
 			int contPunto = 0;
 			for (int i = 0; i < iPriceLength - 1; i++) {
@@ -1890,14 +1909,35 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			string AuxStringMonth = cDateMonth;
 			string AuxStringYear = cDateYear;
 
+			int LenghtOfStr = AuxStringDay.length();
+			if (LenghtOfStr == 1) {
+				AuxStringDay = "0" + AuxStringDay;
+			}
+
+			LenghtOfStr = AuxStringMonth.length();
+			if (LenghtOfStr == 1) {
+				AuxStringMonth = "0" + AuxStringMonth;
+			}
+
 			string cFechacita = AuxStringYear + "/" + AuxStringMonth + "/" + AuxStringDay;
 
 			AuxStringDay = cFechaActual.dia;
 			AuxStringMonth = cFechaActual.mes;
 			AuxStringYear = cFechaActual.año;
 
+			LenghtOfStr = AuxStringDay.length();
+			if (LenghtOfStr == 1) {
+				AuxStringDay = "0" + AuxStringDay;
+			}
+
+			LenghtOfStr = AuxStringMonth.length();
+			if (LenghtOfStr == 1) {
+				AuxStringMonth = "0" + AuxStringMonth;
+			}
+
 			string cFechaActual = AuxStringYear + "/" + AuxStringMonth + "/" + AuxStringDay;
 
+			
 			if (cFechaActual > cFechacita) {
 				MessageBox(NULL, "Ingrese una fecha mayor a la actual", "Error", MB_ICONERROR);
 				SetWindowText(hTxtNewDateMonth, "");
@@ -1905,8 +1945,9 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				SetWindowText(hTxtNewDateYear, "");
 				break;
 			}
+			
 
-			//
+
 
 #pragma endregion obtencion
 
@@ -1928,9 +1969,7 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 					strcpy_s(originC->bitmapPet2, cCurrCita.currbitmapPet2);
 					strcpy_s(originC->bitmapPet3, cCurrCita.currbitmapPet3);
 
-					//originC->fechaCita.dia = cDateDay;
-					//originC->fechaCita.mes = cDateMonth;
-					//originC->fechaCita.año = cDateYear;
+
 
 					string AuxStringDay = cDateDay;
 					string AuxStringMonth = cDateMonth;
