@@ -10,7 +10,7 @@
 
 #define MI_TIMER 555
 
-// todo pagar || mostrar por orden cronologico 
+// todo pagar 
 
 time_t UnixDate;
 struct tm* RealUnixDate;
@@ -72,8 +72,8 @@ struct CurrentDoc {
 
 CurrentDoc cCurr;
 
-//lista de citas
 
+//lista de citas
 struct Calendario {
 	string dia;
 	string mes;
@@ -98,6 +98,7 @@ struct cita {
 	cita *prevC;
 }*originC = NULL, *auxC = NULL;
 
+#pragma region Funciones de ordenamiento lista
 cita *split(cita *head);
 
 cita *merge(cita *first, cita *second)
@@ -184,6 +185,7 @@ cita *split(cita *head)
 	slow->nextC = NULL;
 	return temp;
 }
+#pragma endregion Funciones de ordenamiento lista
 
 struct Currentcita {
 	Calendario cfechaCita;
@@ -198,7 +200,6 @@ struct Currentcita {
 	char currbitmapPet2[MAX_PATH];
 	char currbitmapPet3[MAX_PATH];
 };
-
 
 /////////////////
 
@@ -234,7 +235,6 @@ Node *merge(Node *first, Node *second)
 	}
 }
 */
-
 /*
 Node *mergeSort(Node *head)
 {
@@ -305,15 +305,6 @@ cita *split(cita *head)
 	return temp;
 }*/
 
-
-
-
-
-
-
-
-
-
 Currentcita cCurrCita;
 
 Calendario cFechaActual;
@@ -347,6 +338,7 @@ BOOL CALLBACK finfoadoc(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK fsalir(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK faltacita(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK faltauser(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK fPago(HWND, UINT, WPARAM, LPARAM);
 #pragma endregion CALLBACKS
 
 #pragma region Salidas
@@ -642,8 +634,6 @@ BOOL CALLBACK faltauser(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 //Botones del Principal
 BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
-
-
 	switch (msg) {
 
 	case WM_COMMAND:
@@ -667,7 +657,6 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			SendMessage(hPictureControl, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hImagenDoc);
 
 		}
-		//error
 		else if (LOWORD(wparam) == ID_NUEVACITA) {
 			bCitaAlt = TRUE;
 
@@ -807,9 +796,7 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			int resultsalir = DialogBox(hGlobalInst, MAKEINTRESOURCE(ID_DIALOG_SALIR), hwnd, fsalir);
 			DestroyWindow(hwnd);
 
-		}
-
-		//error
+		}	
 		else if (LOWORD(wparam) == ID_LB_CITAS && HIWORD(wparam) == LBN_SELCHANGE) {
 
 			SelectCita == true;
@@ -850,7 +837,6 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			HWND hLblPetMotive = GetDlgItem(hwnd, ID_SHOWMOTIVEPET);
 			SetWindowText(hLblPetMotive, auxC->motivo.c_str());
 
-			//string sDatePetShow = auxC->fechaCita.dia + "/" + auxC->fechaCita.mes + "/" + auxC->fechaCita.año;
 			string sDatePetShow = auxC->fechaCita;
 
 			HWND hLblDatePet = GetDlgItem(hwnd, ID_SHOWDATEPET);
@@ -1125,11 +1111,13 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 		}
 		else if (LOWORD(wparam) == ID_PAGAR) {
 
+		int resultsalir = DialogBox(hGlobalInst, MAKEINTRESOURCE(ID_PAGO), hwnd, fPago);
+
 		}
 
 		break;
 
-	case WM_INITDIALOG:
+	case WM_INITDIALOG: {
 		//error
 		if (bNewUser != TRUE) {
 
@@ -1183,21 +1171,12 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			HWND hPictureControl = GetDlgItem(hwnd, ID_IMAGE_DOCPRIN);
 			SendMessage(hPictureControl, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hImagenDoc);
 
-			// mostrar listas de citas
-
 			auxC = originC;
 			int index = 0;
 			HWND hLbCitas = GetDlgItem(hwnd, ID_LB_CITAS);
 			SendMessage(hLbCitas, LB_RESETCONTENT, NULL, NULL);
 
 			bool bCitasExist = false;
-			// todo mostrar en la caja los datos mas proximos a mas lejanos
-
-			//originC = mergeSort(originC);
-			//auxC = originC;
-
-			//originC = mergeSort(originC);
-			//auxC = originC;
 
 			while (auxC != NULL) {
 
@@ -1207,7 +1186,7 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 					//index = auxC->IDp;
 					SendMessage(hLbCitas, LB_ADDSTRING, NULL, (LPARAM)auxC->nameMascota.c_str());
 					SendMessage(hLbCitas, LB_SETITEMDATA, (WPARAM)index, (LPARAM)auxC->IDp);
-				 index++;
+					index++;
 				}
 
 				auxC = auxC->nextC;
@@ -1241,7 +1220,7 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 		}
 
 		return TRUE;
-
+	}
 		break;
 
 	case WM_WINDOWPOSCHANGED:
@@ -1318,7 +1297,6 @@ BOOL CALLBACK fprincipal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 			bNewUser = FALSE;
 		}
 		break;
-
 
 	case WM_CLOSE:
 		//	DestroyWindow(hwnd);
@@ -1630,7 +1608,7 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 		}
 
 	}
-						break;
+		break;
 
 	case WM_COMMAND:
 
@@ -1796,22 +1774,6 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				}
 			}
 
-
-			//Date
-			if ((iPhoneLenght > 9 || iPhoneLenght < 9)) {
-				if ((iPhoneLenght > 11 || iPhoneLenght < 11)) {
-					if ((iPhoneLenght > 13 || iPhoneLenght < 13)) {
-						MessageBox(NULL, "telefono debe tener 8, 10 0 12 digitos", "Error", MB_ICONERROR);
-						SetWindowText(hTxtNewTelephone, "");
-						break;
-					}
-				}
-			}
-
-
-
-
-
 			Digit = FALSE;
 			int contPunto = 0;
 			for (int i = 0; i < iPriceLength - 1; i++) {
@@ -1944,9 +1906,6 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				break;
 			}
 
-
-
-
 			//
 
 #pragma endregion obtencion
@@ -2014,12 +1973,6 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 					strcpy_s(auxC->bitmapPet2, cCurrCita.currbitmapPet2);
 					strcpy_s(auxC->bitmapPet3, cCurrCita.currbitmapPet3);
 
-					/*
-					auxC->fechaCita.dia = cDateDay;
-					auxC->fechaCita.mes = cDateMonth;
-					auxC->fechaCita.año = cDateYear;
-					*/
-
 					string AuxStringDay = cDateDay;
 					string AuxStringMonth = cDateMonth;
 					string AuxStringYear = cDateYear;
@@ -2056,12 +2009,6 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 				strcpy_s(auxC->bitmapPet1, cCurrCita.currbitmapPet1);
 				strcpy_s(auxC->bitmapPet2, cCurrCita.currbitmapPet2);
 				strcpy_s(auxC->bitmapPet3, cCurrCita.currbitmapPet3);
-
-				/*
-				auxC->fechaCita.dia = cDateDay;
-				auxC->fechaCita.mes = cDateMonth;
-				auxC->fechaCita.año = cDateYear;
-				*/
 
 				string AuxStringDay = cDateDay;
 				string AuxStringMonth = cDateMonth;
@@ -2200,7 +2147,7 @@ BOOL CALLBACK faltacita(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 			break;
 		}
-		MessageBox(NULL, "Se volvera a la pantalla inicial", "XD", MB_ICONINFORMATION);
+		
 		EndDialog(hwnd, NumInfExit);
 		break;
 		}
@@ -2252,6 +2199,70 @@ BOOL CALLBACK fsalir(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	return FALSE;
 }
 
+
+//botones de Pagar
+BOOL CALLBACK fPago(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+
+	switch (msg) {
+	case WM_COMMAND: {
+
+
+		if (LOWORD(wparam) == ID_BTN_PAGOACEPT && HIWORD(wparam) == BN_CLICKED) {
+
+				EndDialog(hwnd, NumSalidaExit);
+		}
+		else if (IsDlgButtonChecked(hwnd, ID_RB_CONTADO) == BST_CHECKED) {
+
+			string straux = to_string(auxC->costo);
+
+			HWND hLblCostPet = GetDlgItem(hwnd, ID_SHOW_MSIPRICE);
+			SetWindowText(hLblCostPet, straux.c_str());
+
+		}
+		else if (IsDlgButtonChecked(hwnd, ID_RB_3MSI ) == BST_CHECKED) {
+
+			string straux = to_string( (auxC->costo)/3 );
+
+			HWND hLblCostPet = GetDlgItem(hwnd, ID_SHOW_MSIPRICE);
+			SetWindowText(hLblCostPet, straux.c_str());
+
+		}
+		else if (IsDlgButtonChecked(hwnd, ID_RB_6MSI) == BST_CHECKED) {
+
+			string straux = to_string((auxC->costo) / 6);
+
+			HWND hLblCostPet = GetDlgItem(hwnd, ID_SHOW_MSIPRICE);
+			SetWindowText(hLblCostPet, straux.c_str());
+
+		}
+		else if (IsDlgButtonChecked(hwnd, ID_RB_12MSI) == BST_CHECKED) {
+
+			string straux = to_string((auxC->costo) / 12);
+
+			HWND hLblCostPet = GetDlgItem(hwnd, ID_SHOW_MSIPRICE);
+			SetWindowText(hLblCostPet, straux.c_str());
+
+		}
+		else if (LOWORD(wparam) == ID_BTN_PAGOACEPT && HIWORD(wparam) == BN_CLICKED) {
+
+			EndDialog(hwnd, NumSalidaExit);
+		}
+		break;
+
+	case WM_INITDIALOG: {
+
+		HWND hLblCostPet = GetDlgItem(hwnd, ID_SHOW_MSIPRICE);
+		SetWindowText(hLblCostPet, "");
+
+		return TRUE; }
+		break;
+
+	 }break;
+
+	}
+
+	return FALSE;
+}
 #pragma endregion CALLS
 
 #pragma region Lectura_Escritura

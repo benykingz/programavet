@@ -8,6 +8,7 @@
 #define ID_MENU_PRINCIPAL               113
 #define ID_DIALOG_SALIR                 120
 #define ID_ALTA_PET                     123
+#define ID_PAGO                         125
 #define ID_EDIT_CONTRASENA              1002
 #define ID_EDIT_USUARIO                 1004
 #define ID_EST_USUARIO                  1005
@@ -35,7 +36,7 @@
 #define ID_STATICNAMEPET                1041
 #define ID_PET_NAME                     1042
 #define ID_MOTIVOPET                    1043
-#define IDC_EDIT2                       1044
+#define IDC_EDIT2                       7044
 #define ID_MOTIVE_PET                   1044
 #define ID_SATTEL                       1045
 #define ID_STC_CLIENT                   1046
@@ -70,7 +71,12 @@
 #define ID_GETYEAR                      1077
 #define IDC_STATIC_M                    1078
 #define IDC_STATIC_Y                    1079
-#define IDC_LIST1                       1080
+#define ID_RB_3MSI                      1081
+#define ID_RB_6MSI                      1083
+#define IDC_RADIO4                      7084
+#define ID_RB_12MSI                     1084
+#define ID_STC_PAGOTEXT                 1085
+#define ID_SHOW_MSIPRICE                1086
 #define ID_DIALOG_PRIN                  1102
 #define ID_NEW_EDIT_PASS                1111
 #define ID_NEW_BTN_REG                  1112
@@ -80,10 +86,12 @@
 #define ID_SALIR_GUARDAR                2125
 #define IDC_DATETIMEPICKER1             5073
 #define IDC_BUTTON1                     5125
-#define ID_ELIMINAR                     5125
+#define ID_ELIMINAR                     5126
+#define ID_BTN_PAGOACEPT                5127
 #define ID_                             10312
-#define ID_SHOWBIT2_ALT                 10312
-#define ID_SHOWPIC2                     10312
+#define ID_SHOWBIT2_ALT                 10313
+#define ID_SHOWPIC2                     10314
+#define ID_RB_CONTADO                   10315
 #define ID_INFORMACIONDEDOCTOR          40001
 #define ID_NUEVACITA                    40002
 #define ID_AGENDA                       40003
@@ -93,9 +101,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        125
+#define _APS_NEXT_RESOURCE_VALUE        127
 #define _APS_NEXT_COMMAND_VALUE         40005
-#define _APS_NEXT_CONTROL_VALUE         1081
+#define _APS_NEXT_CONTROL_VALUE         1087
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
